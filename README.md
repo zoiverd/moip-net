@@ -1,2 +1,2 @@
 # moip-net
-Biblioteca de acesso às APIs do moip
+Biblioteca para acesso às APIs do moip
