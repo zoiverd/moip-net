@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System;
+using System.Linq;
+using System.Net;
 
 namespace Moip.Net
 {
@@ -17,17 +19,15 @@ namespace Moip.Net
         /// </summary>
         public ResponseDetail[] Errors { get; set; }
 
-        public struct ResponseDetail
-        {
-            /// <summary>
-            /// Descrição do alerta
-            /// </summary>
-            public string Description { get; set; }
 
-            /// <summary>
-            /// Código do alerta
-            /// </summary>
-            public string Code { get; set; }
+        public string FullMessage
+        {
+            get
+            {
+                var msg = Message;
+                msg += string.Join("\r\n", Errors.Select(x => "- " + x.Description).ToArray());
+                return msg;
+            }
         }
 
     }

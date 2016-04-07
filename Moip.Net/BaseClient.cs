@@ -150,11 +150,15 @@ namespace Moip.Net
 
                     if(string.IsNullOrEmpty(jsonResult))
                     {
-                        throw new MoipException(string.Format("Erro ao executar o comando {0} - {1}", httpResponse.ResponseUri, httpResponse.StatusDescription), httpResponse.StatusCode);
+                        throw new MoipException(string.Format("Erro ao acessar {0} - {1}", httpResponse.ResponseUri, httpResponse.StatusDescription), httpResponse.StatusCode);
+                    }
+
+                    if(httpResponse.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        throw new MoipException("APIKey ou Token inválidos.", httpResponse.StatusCode);
                     }
 
                     var responseError = FromJson<ResponseError>(jsonResult);
-
                     throw new MoipException(responseError, httpResponse.StatusCode);
                 }
                 throw;

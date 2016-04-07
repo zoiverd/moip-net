@@ -146,6 +146,79 @@ namespace Moip.Net.Assinaturas
             DoRequest(uri, "PUT", ToJson(customer));
         }
 
+        /// <summary>
+        /// Atualize os dados de pagamento de seu assinante.
+        /// </summary>
+        /// <param name="customerCode">Código do assinante</param>
+        /// <param name="billingInfo">Dados do cartão de crédito</param>
+        /// <returns>Dados alterados com sucesso</returns>
+        public Response UpdateBillingInfo(string customerCode, BillingInfoRequest billingInfo)
+        {
+            var uri = PathToUri(string.Format("customers/{0}/billing_infos", customerCode));
+            return DoRequest<Response>(uri, "PUT", ToJson(billingInfo));
+        }
+
+        #endregion
+
+        #region Subscriptions
+        public SubscriptionResponse CreateSubscription(Subscription subscription, bool newCustomer)
+        {
+            var uri = PathToUri("subscriptions", "new_customer=" + newCustomer.ToString());
+            return DoRequest<SubscriptionResponse>(uri, "POST", ToJson(subscription));
+        }
+
+        public SubscriptionsResponse GetSubscriptions()
+        {
+            var uri = PathToUri("subscriptions");
+            return DoRequest<SubscriptionsResponse>(uri);
+        }
+
+        public SubscriptionResponse GetSubscription(string code)
+        {
+            var uri = PathToUri("subscriptions/" + code);
+            return DoRequest<SubscriptionResponse>(uri);
+        }
+
+        public void SuspendSubscription(string code)
+        {
+            var uri = PathToUri(string.Format("subscriptions/{0}/suspend", code));
+            DoRequest(uri, "PUT");
+        }
+
+        public void ActivateSubscription(string code)
+        {
+            var uri = PathToUri(string.Format("subscriptions/{0}/activate", code));
+            DoRequest(uri, "PUT");
+        }
+
+        public void CancelSubscription(string code)
+        {
+            var uri = PathToUri(string.Format("subscriptions/{0}/cancel", code));
+            DoRequest(uri, "PUT");
+        }
+
+        public void UpdateSubscription(string code, Subscription subscription)
+        {
+            var uri = PathToUri("subscriptions/" + code);
+            DoRequest(uri, "PUT", ToJson(subscription));
+        }
+        #endregion
+
+        #region Invoices
+
+        public InvoicesResponse GetInvoices(string subscriptionCode)
+        {
+            var uri = PathToUri(string.Format("subscriptions/{0}/invoices", subscriptionCode));
+            return DoRequest<InvoicesResponse>(uri);
+        }
+
+
+        public Invoice GetInvoice(int invoiceId)
+        {
+            var uri = PathToUri("invoices/" + invoiceId.ToString());
+            return DoRequest<Invoice>(uri);
+        }
+
         #endregion
 
     }

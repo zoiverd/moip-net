@@ -48,17 +48,25 @@
     <Compile Include="Assinaturas\CustomerResponse.cs" />
     <Compile Include="Assinaturas\CustomerRequest.cs" />
     <Compile Include="Assinaturas\Customer.cs" />
+    <Compile Include="Assinaturas\Invoice.cs" />
+    <Compile Include="Assinaturas\ItemInvoice.cs" />
     <Compile Include="Assinaturas\Plan.cs" />
     <Compile Include="Assinaturas\CustomersResponse.cs" />
     <Compile Include="Assinaturas\PlanInterval.cs" />
+    <Compile Include="Assinaturas\InvoicesResponse.cs" />
+    <Compile Include="Assinaturas\SubscriptionsResponse.cs" />
     <Compile Include="Assinaturas\PlansResponse.cs" />
     <Compile Include="Assinaturas\PlanTrial.cs" />
-    <Compile Include="Assinaturas\Subscriptions.cs" />
+    <Compile Include="Assinaturas\StatusInvoice.cs" />
+    <Compile Include="Assinaturas\Subscription.cs" />
+    <Compile Include="Assinaturas\SubscriptionResponse.cs" />
+    <Compile Include="Assinaturas\SubscriptionTrial.cs" />
     <Compile Include="BaseClient.cs" />
     <Compile Include="MoipContractResolver.cs" />
     <Compile Include="MoipDate.cs" />
     <Compile Include="MoipException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResponseDetail.cs" />
     <Compile Include="ResponseError.cs" />
     <Compile Include="Response.cs" />
   </ItemGroup>

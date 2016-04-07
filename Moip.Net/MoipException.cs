@@ -13,7 +13,7 @@ namespace Moip.Net
             StatusCode = statusCode;
         }
 
-        public MoipException(ResponseError responseError, HttpStatusCode statusCode) : this(responseError.Message, statusCode)
+        public MoipException(ResponseError responseError, HttpStatusCode statusCode) : this(responseError.FullMessage, statusCode)
         {
             ResponseError = responseError;
         }

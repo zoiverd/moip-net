@@ -226,8 +226,194 @@ namespace Moip.Net.Assinaturas.Tests
 
         }
 
+        [TestMethod()]
+        public void UpdateBillingInfoTest()
+        {
+            var firstCustomer = GetCustomers().Customers.First();
+            var billingInfo = new BillingInfoRequest()
+            {
+                CreditCard = new CreditCard()
+                {
+                    HolderName = "Novo Nome",
+                    Number = "5555666677778884",
+                    ExpirationMonth = "04",
+                    ExpirationYear = "16"
+                }
+            };
+
+            var retorno = assinaturasClient.UpdateBillingInfo(firstCustomer.Code, billingInfo);
+
+            Assert.AreEqual("Dados alterados com sucesso", retorno.Message);
+
+        }
+
         #endregion
 
+        #region Subscriptions
+        [TestMethod()]
+        public void CreateSubscriptionTestWithExistentCustomer()
+        {
+            var firstPlan = GetPlans().Plans.First();
+            var firstCustomer = GetCustomers().Customers.First();
 
+            var subscription = new Subscription()
+            {
+                Code = "_test_assinatura_" + DateTime.Now.Ticks,
+                PaymentMethod = Plan.PaymentMethodPlan.CREDIT_CARD,
+                Plan = firstPlan,
+                Customer = firstCustomer
+            };
+
+            var retorno = assinaturasClient.CreateSubscription(subscription, false);
+            Assert.AreEqual("Assinatura criada com sucesso", retorno.Message);
+
+        }
+
+        [TestMethod()]
+        public void CreateSubscriptionTestWithNewCustomer()
+        {
+            var firstPlan = GetPlans().Plans.First();
+            var customer = NewMockCustomer();
+
+            var subscription = new Subscription()
+            {
+                Code = "_test_assinatura_" + DateTime.Now.Ticks,
+                PaymentMethod = Plan.PaymentMethodPlan.CREDIT_CARD,
+                Plan = firstPlan,
+                Customer = customer
+            };
+
+            var retorno = assinaturasClient.CreateSubscription(subscription, true);
+            Assert.AreEqual("Assinatura criada com sucesso", retorno.Message);
+
+        }
+
+        [TestMethod()]
+        public void GetSubscriptionsTest()
+        {
+            var retorno = assinaturasClient.GetSubscriptions();
+            Assert.IsNotNull(retorno);
+            Assert.IsNotNull(retorno.Subscriptions);
+            Assert.IsTrue(retorno.Subscriptions.Length > 0);
+            Assert.IsNotNull(retorno.Subscriptions[0].Code);
+        }
+
+        private SubscriptionsResponse GetSubscriptions()
+        {
+            var subscriptions = assinaturasClient.GetSubscriptions();
+
+            if (subscriptions == null || subscriptions.Subscriptions.Length == 0)
+            {
+                throw new AssertInconclusiveException("Nenhuma assinatura foi encontrado na sua conta do moip");
+            }
+
+            return subscriptions;
+        }
+
+        [TestMethod()]
+        public void GetSubscriptionTest()
+        {
+            var firstSubscription = GetSubscriptions().Subscriptions.First();
+            var subscription = assinaturasClient.GetSubscription(firstSubscription.Code);
+
+            Assert.AreEqual(firstSubscription.Code, subscription.Code);
+        }
+
+        [TestMethod()]
+        public void SuspendSubscriptionTest()
+        {
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.ACTIVE || x.Status == Subscription.SubscriptionStatus.TRIAL);
+
+            if (firstActive == null)
+            {
+                throw new AssertInconclusiveException("Nenhum plano ativo foi encontrado na conta moip");
+            }
+
+            assinaturasClient.SuspendSubscription(firstActive.Code);
+
+            var subscription = assinaturasClient.GetSubscription(firstActive.Code);
+            Assert.AreEqual(Subscription.SubscriptionStatus.SUSPENDED, subscription.Status);
+        }
+
+
+        [TestMethod()]
+        public void ActivateSubscriptionTest()
+        {
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.SUSPENDED);
+
+            if (firstActive == null)
+            {
+                throw new AssertInconclusiveException("Nenhum plano SUSPENSO foi encontrado na conta moip");
+            }
+
+            assinaturasClient.ActivateSubscription(firstActive.Code);
+
+            var subscription = assinaturasClient.GetSubscription(firstActive.Code);
+            Assert.AreEqual(Subscription.SubscriptionStatus.ACTIVE, subscription.Status);
+        }
+
+
+        [TestMethod()]
+        public void CancelSubscriptionTest()
+        {
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status != Subscription.SubscriptionStatus.CANCELED);
+
+            if (firstActive == null)
+            {
+                throw new AssertInconclusiveException("Nenhum plano diferente de cancelado foi encontrado na conta moip");
+            }
+
+            assinaturasClient.CancelSubscription(firstActive.Code);
+
+            var subscription = assinaturasClient.GetSubscription(firstActive.Code);
+            Assert.AreEqual(Subscription.SubscriptionStatus.CANCELED, subscription.Status);
+        }
+
+        [TestMethod()]
+        public void UpdateSubscriptionTest()
+        {
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status != Subscription.SubscriptionStatus.CANCELED);
+
+            if (firstActive == null)
+            {
+                throw new AssertInconclusiveException("Nenhum plano diferente de cancelado foi encontrado na conta moip");
+            }
+
+            var random = new Random().Next(30);
+            var newDate = DateTime.Now.AddDays(random).Date;
+            firstActive.NextInvoiceDate = MoipDate.FromDate(newDate);
+            assinaturasClient.UpdateSubscription(firstActive.Code, firstActive);
+
+            var subscription = assinaturasClient.GetSubscription(firstActive.Code);
+
+            Assert.AreEqual(newDate, subscription.NextInvoiceDate.ToDate());
+        }
+        #endregion
+
+        [TestMethod()]
+        public void GetInvoicesTest()
+        {
+            //Pega a primeira ativa (tem mais chances de ter gerado cobrança)
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.ACTIVE);
+
+            var retorno = assinaturasClient.GetInvoices(firstActive.Code);
+
+            Assert.IsNotNull(retorno);
+            Assert.IsNotNull(retorno.Invoices);
+            Assert.IsTrue(retorno.Invoices.Length > 0);
+            Assert.IsNotNull(retorno.Invoices[0].Id);
+        }
+
+        [TestMethod()]
+        public void GetInvoiceTest()
+        {
+            //Pega a primeira ativa (tem mais chances de ter gerado cobrança)
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.ACTIVE);
+            var invoices = assinaturasClient.GetInvoices(firstActive.Code);
+            var id = invoices.Invoices.First().Id;
+            var invoice = assinaturasClient.GetInvoice(id);
+
+            Assert.AreEqual(id, invoice.Id);
+        }
     }
 }

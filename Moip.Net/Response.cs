@@ -16,19 +16,6 @@ namespace Moip.Net
         /// Alertas da mensagem, se existirem
         /// </summary>
         public ResponseDetail[] Alerts { get; set; }
-        
-        public struct ResponseDetail
-        {
-            /// <summary>
-            /// Descrição do alerta
-            /// </summary>
-            public string Description { get; set; }
-
-            /// <summary>
-            /// Código do alerta
-            /// </summary>
-            public string Code { get; set; }
-        }
 
     }
 
