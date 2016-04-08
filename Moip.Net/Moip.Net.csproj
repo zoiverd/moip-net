@@ -43,6 +43,9 @@
   <ItemGroup>
     <Compile Include="Assinaturas\AssinaturasClient.cs" />
     <Compile Include="Assinaturas\BillingInfoRequest.cs" />
+    <Compile Include="Assinaturas\Coupon.cs" />
+    <Compile Include="Assinaturas\CouponDiscount.cs" />
+    <Compile Include="Assinaturas\CouponDuration.cs" />
     <Compile Include="Assinaturas\CreditCard.cs" />
     <Compile Include="Assinaturas\CustomerAddress.cs" />
     <Compile Include="Assinaturas\CustomerResponse.cs" />
@@ -54,6 +57,8 @@
     <Compile Include="Assinaturas\CustomersResponse.cs" />
     <Compile Include="Assinaturas\PlanInterval.cs" />
     <Compile Include="Assinaturas\InvoicesResponse.cs" />
+    <Compile Include="Assinaturas\CouponsResponse.cs" />
+    <Compile Include="Assinaturas\PreferencesRetry.cs" />
     <Compile Include="Assinaturas\SubscriptionsResponse.cs" />
     <Compile Include="Assinaturas\PlansResponse.cs" />
     <Compile Include="Assinaturas\PlanTrial.cs" />

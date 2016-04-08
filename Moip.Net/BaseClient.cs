@@ -72,7 +72,7 @@ namespace Moip.Net
 
             webRequest.Headers["Authorization"] = GetAuthorizationHeader();
 
-            if (method == "POST" || method == "PUT")
+            if (method == "POST" || method == "PUT" || method == "DELETE")
             {
                 webRequest.ContentType = "application/json";
             }
@@ -148,7 +148,7 @@ namespace Moip.Net
                 {
                     string jsonResult = GetResponseAsString(wexc.Response);
 
-                    if(string.IsNullOrEmpty(jsonResult))
+                    if(httpResponse.ContentType.IndexOf("json") < 0 || string.IsNullOrEmpty(jsonResult))
                     {
                         throw new MoipException(string.Format("Erro ao acessar {0} - {1}", httpResponse.ResponseUri, httpResponse.StatusDescription), httpResponse.StatusCode);
                     }

@@ -221,5 +221,76 @@ namespace Moip.Net.Assinaturas
 
         #endregion
 
+        #region Coupons
+
+        public Coupon CreateCoupon(Coupon coupon)
+        {
+            var uri = PathToUri("coupons");
+            return DoRequest<Coupon>(uri, "POST", ToJson(coupon));
+        }
+
+        public void AssociateCoupon(string couponCode, string subscriptionCode)
+        {
+            var subscription = new Subscription()
+            {
+                Code = subscriptionCode,
+                Coupon = new Coupon()
+                {
+                    Code = couponCode
+                }
+            };
+
+            var uri = PathToUri("subscriptions/" + subscriptionCode);
+            DoRequest(uri, "PUT", ToJson(subscription));
+        } 
+
+        public Coupon GetCoupon(string code)
+        {
+            var uri = PathToUri("coupons/" + code);
+            return DoRequest<Coupon>(uri);
+        }
+
+        public CouponsResponse GetCoupons()
+        {
+            var uri = PathToUri("coupons");
+            return DoRequest<CouponsResponse>(uri);
+        }
+
+        public Coupon ActivateCoupon(string code)
+        {
+            var uri = PathToUri(string.Format("coupons/{0}/active", code));
+            return DoRequest<Coupon>(uri, "PUT");
+        }
+
+        public Coupon InactivateCoupon(string code)
+        {
+            var uri = PathToUri(string.Format("coupons/{0}/inactive", code));
+            return DoRequest<Coupon>(uri, "PUT");
+        }
+
+        public SubscriptionResponse DesassociateCoupon(string subscriptionCode)
+        {
+            var uri = PathToUri(string.Format("subscriptions/{0}/coupon", subscriptionCode));
+            return DoRequest<SubscriptionResponse>(uri, "DELETE");
+        }
+
+        #endregion
+
+        #region Retrys
+
+        public void InvoiceRetry(int invoiceId)
+        {
+            var uri = PathToUri(string.Format("invoices/{0}/retry", invoiceId));
+            DoRequest(uri, "POST");
+        }
+
+        public void InvoiceRetryPreferences(PreferencesRetry preferences)
+        {
+            var uri = PathToUri("users/preferences/retry");
+            DoRequest(uri, "POST", ToJson(preferences));
+        }
+
+        #endregion
+
     }
 }

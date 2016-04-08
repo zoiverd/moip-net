@@ -25,7 +25,7 @@ namespace Moip.Net
             get
             {
                 var msg = Message;
-                msg += string.Join("\r\n", Errors.Select(x => "- " + x.Description).ToArray());
+                msg += string.Join(@"\r\n", Errors.Select(x => "- " + x.Description).ToArray());
                 return msg;
             }
         }

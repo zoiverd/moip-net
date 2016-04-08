@@ -36,6 +36,11 @@ namespace Moip.Net.Assinaturas
         public Customer Customer { get; set; }
 
         /// <summary>
+        /// Um coupon pode ser associado a uma nova assinatura ou a uma assinatura existente, entretanto, em ambos os casos é necessário que o coupon já tenha sido criado. Não é possível criar um coupon e associá-lo com uma assinatura ao mesmo tempo.
+        /// </summary>
+        public Coupon Coupon { get; set; }
+
+        /// <summary>
         /// Método de pagamento da assinatura
         /// </summary>
         /// <remarks>Obrigatório</remarks>

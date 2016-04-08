@@ -390,12 +390,12 @@ namespace Moip.Net.Assinaturas.Tests
         }
         #endregion
 
+        #region Invoices
         [TestMethod()]
         public void GetInvoicesTest()
         {
             //Pega a primeira ativa (tem mais chances de ter gerado cobrança)
             var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.ACTIVE);
-
             var retorno = assinaturasClient.GetInvoices(firstActive.Code);
 
             Assert.IsNotNull(retorno);
@@ -415,5 +415,174 @@ namespace Moip.Net.Assinaturas.Tests
 
             Assert.AreEqual(id, invoice.Id);
         }
+        #endregion
+
+        #region Coupons
+        [TestMethod()]
+        public void CreateCouponTest()
+        {
+            var coupon = new Coupon()
+            {
+                Code = "_test_coupon_" + DateTime.Now.Ticks,
+                Name = "Coupon Teste Unitario",
+                Description = "Descrição do coupon de teste",
+                Discount = new CouponDiscount()
+                {
+                    Value = 1000,
+                    Type = DiscountType.AMOUNT
+                },
+                Status = Coupon.CouponStatus.ACTIVE,
+                Duration = new CouponDuration()
+                {
+                    Type = CouponDuration.DurationType.REPEATING,
+                    Occurrences = 2
+                },
+                MaxRedemptions = 100,
+                ExpirationDate = MoipDate.FromDate(DateTime.Now.Date.AddDays(10))
+            };
+
+            var retorno = assinaturasClient.CreateCoupon(coupon);
+
+            Assert.AreEqual(coupon.Code, retorno.Code);
+        }
+
+        private CouponsResponse GetCoupons()
+        {
+            var coupons = assinaturasClient.GetCoupons();
+
+            if (coupons == null || coupons.Coupons == null || coupons.Coupons.Length == 0)
+            {
+                throw new AssertInconclusiveException("Nenhum cupom foi encontrado no cadastro");
+            }
+
+            return coupons;
+        }
+
+        [TestMethod()]
+        public void AssociateCouponTest()
+        {
+            var coupon = GetCoupons().Coupons.First();
+            var subscription = GetSubscriptions().Subscriptions.First(x => x.Status == Subscription.SubscriptionStatus.ACTIVE);
+
+            assinaturasClient.AssociateCoupon(coupon.Code, subscription.Code);
+
+            subscription = assinaturasClient.GetSubscription(subscription.Code);
+
+            Assert.AreEqual(coupon.Code, subscription.Coupon.Code);
+        }
+
+        [TestMethod()]
+        public void GetCouponTest()
+        {
+            var firstCoupon = GetCoupons().Coupons.First();
+            var coupon = assinaturasClient.GetCoupon(firstCoupon.Code);
+
+            Assert.AreEqual(firstCoupon.Name, coupon.Name);
+        }
+
+        [TestMethod()]
+        public void GetCouponsTest()
+        {
+            var retorno = assinaturasClient.GetCoupons();
+            Assert.IsNotNull(retorno);
+            Assert.IsNotNull(retorno.Coupons);
+            Assert.IsTrue(retorno.Coupons.Length > 0);
+            Assert.IsNotNull(retorno.Coupons[0].Code);
+        }
+
+        [TestMethod()]
+        public void InactivateCouponTest()
+        {
+            var activeCoupon = GetCoupons().Coupons.Where(x => x.Status == Coupon.CouponStatus.ACTIVE).FirstOrDefault();
+
+            if (activeCoupon == null)
+            {
+                throw new AssertInconclusiveException("Nenhum cupom ativo foi encontrado");
+            }
+
+            var coupon = assinaturasClient.InactivateCoupon(activeCoupon.Code);
+
+            Assert.AreEqual(Coupon.CouponStatus.INACTIVE, coupon.Status);
+        }
+
+        [TestMethod()]
+        public void ActivateCouponTest()
+        {
+            var inactiveCoupon = GetCoupons().Coupons.Where(x => x.Status == Coupon.CouponStatus.INACTIVE).FirstOrDefault();
+
+            if (inactiveCoupon == null)
+            {
+                throw new AssertInconclusiveException("Nenhum cupom inativo foi encontrado");
+            }
+
+            var coupon = assinaturasClient.ActivateCoupon(inactiveCoupon.Code);
+
+            Assert.AreEqual(Coupon.CouponStatus.ACTIVE, coupon.Status);
+        }
+
+        [TestMethod()]
+        public void DesassociateCouponTest()
+        {
+            var coupon = GetCoupons().Coupons.FirstOrDefault(x => x.Status == Coupon.CouponStatus.ACTIVE);
+            var subscription = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.ACTIVE || x.Status == Subscription.SubscriptionStatus.TRIAL);
+
+            if (coupon == null)
+            {
+                throw new AssertInconclusiveException("Nenhum cupom ativo foi encontrado.");
+            }
+
+            if (subscription == null)
+            {
+                throw new AssertInconclusiveException("Nenhuma assinatura ativa foi encontrada");
+            }
+
+            //Primeiro associa o cupon, depois testa desassociar
+            assinaturasClient.AssociateCoupon(coupon.Code, subscription.Code);
+            subscription = assinaturasClient.DesassociateCoupon(subscription.Code);
+
+            Assert.IsNull(subscription.Coupon);
+        }
+
+        #endregion
+
+        #region Retry
+
+        [TestMethod()]
+        public void InvoiceRetryTest()
+        {
+            //Pega a primeira ativa (tem mais chances de ter gerado cobrança)
+            var firstActive = GetSubscriptions().Subscriptions.FirstOrDefault(x => x.Status == Subscription.SubscriptionStatus.ACTIVE);
+            var invoice = assinaturasClient.GetInvoices(firstActive.Code);
+
+            try
+            {
+                //Tenta o retry, mas é dificil ter algum na situação de retry, então vou ter que aceitar o erro de retry como um OK (já que a informação chegou corretamente na API do moip)
+                assinaturasClient.InvoiceRetry(invoice.Invoices[0].Id);
+            }
+            catch (MoipException ex)
+            {
+                //Caso a fatura esteja ativa, ele volta o erro, mas pelo menos chegou lá e validou
+                Assert.IsTrue(ex.Message.IndexOf("ativo", StringComparison.CurrentCultureIgnoreCase) > 0);
+            }
+
+            Assert.IsTrue(true);
+        }
+
+        [TestMethod()]
+        public void InvoiceRetryPreferencesTest()
+        {
+            var retryPreference = new PreferencesRetry()
+            {
+                FirstTry = 1,
+                SecondTry = 1,
+                ThirdTry = 1,
+                Finally = PreferencesRetry.RetryFinallyType.CANCEL
+            };
+
+            assinaturasClient.InvoiceRetryPreferences(retryPreference);
+
+            Assert.IsTrue(true);
+        } 
+        #endregion
     }
 }
