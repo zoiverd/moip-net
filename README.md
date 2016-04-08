@@ -6,7 +6,7 @@ ATENÇÃO! Apenas as funções de assinatura estão implementadas, mas você pod
 
 ## Instalação
 
-Moip.Net está disponível como um [NuGet Package](https://www.nuget.org/packages/Freshdesk/). Esta é a melhor forma de instalar a biblioteca no seu projeto.
+Moip.Net está disponível como um [NuGet Package](https://www.nuget.org/packages/moip-net/). Esta é a melhor forma de instalar a biblioteca no seu projeto.
 
 #### Visual Studio
 
