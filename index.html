@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Moip-net by zoiverd</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Moip-net</h1>
+        <h2>Biblioteca de acesso às APIs do moip</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/zoiverd/moip-net/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/zoiverd/moip-net/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/zoiverd/moip-net" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="moipnet" class="anchor" href="#moipnet" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Moip.Net</h1>
+
+<p>Moip.Net é uma biblioteca para utilizar as funções da API do Moip.</p>
+
+<p>ATENÇÃO! A implementação da V1 da API não será considerada neste componente, uma vez que a V2 já está em ambiente de produção.</p>
+
+<p>Estão implementadas as bibliotecas de Assinatura e Pagamento V2.</p>
+
+<h2>
+<a id="instalação" class="anchor" href="#instala%C3%A7%C3%A3o" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Instalação</h2>
+
+<p>Moip.Net está disponível como um <a href="https://www.nuget.org/packages/moip-net/">NuGet Package</a>. Esta é a melhor forma de instalar a biblioteca no seu projeto.</p>
+
+<h3>
+<a id="visual-studio" class="anchor" href="#visual-studio" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Visual Studio</h3>
+
+<pre><code>Click on *Tools -&gt; NuGet Package Manager -&gt; Package Manager Console* and enter the following
+
+PM&gt; Install-Package moip-net
+</code></pre>
+
+<h2>
+<a id="pagamentos-v2" class="anchor" href="#pagamentos-v2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pagamentos v2</h2>
+
+<h3>
+<a id="como-usar" class="anchor" href="#como-usar" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Como usar</h3>
+
+<p>A biblioteca irá chamar a API do moip. Veja na <a href="http://dev.moip.com.br/referencia-api/">Documentação do moip</a> os parâmetros que devem ser enviadas a cada chamada.</p>
+
+<p>Nos exemplos escritos, estamos assumindo que há os seguintes usings</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">using</span> Moip.Net.V2<span class="pl-k">;</span>
+<span class="pl-k">using</span> Moip.Net.V2.Model<span class="pl-k">;</span></pre></div>
+
+<h3>
+<a id="exemplos" class="anchor" href="#exemplos" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Exemplos</h3>
+
+<p>Todas as funções de pagamento são chamadas através de uma instância da classe V2Client.
+Para criar uma instância, você deve informar o ambiente (produção ou sandbox), sua API_Key e seu Token.</p>
+
+<h4>
+<a id="criando-um-pedido-com-um-novo-cliente" class="anchor" href="#criando-um-pedido-com-um-novo-cliente" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Criando um pedido com um novo cliente</h4>
+
+<p>Veja a documentação aqui: <a href="http://dev.moip.com.br/referencia-api/#criar-pedido-post">Criar pedido</a></p>
+
+<div class="highlight highlight-source-cs"><pre>
+<span class="pl-k">var</span> v2Client =  <span class="pl-k">new</span> V2Client(
+    <span class="pl-k">new</span> Uri(<span class="pl-s"><span class="pl-pds">"</span>https://sandbox.moip.com.br/<span class="pl-pds">"</span></span>), 
+    <span class="pl-s"><span class="pl-pds">"</span>API_TOKEN<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>API_KEY<span class="pl-pds">"</span></span>
+);
+
+<span class="pl-k">var</span> pedido = <span class="pl-k">new</span> Pedido()
+{
+    OwnId = <span class="pl-s"><span class="pl-pds">"</span>SEU_CODIGO_PEDIDO<span class="pl-pds">"</span></span>,
+    Amount = <span class="pl-k">new</span> Valores()
+    {
+        Currency = CurrencyType.BRL,
+        Subtotals = <span class="pl-k">new</span> Subtotal()
+        {
+            Shipping = <span class="pl-c1">1000</span>
+        }
+    },
+    Items = <span class="pl-k">new</span> List&lt;ItemPedido&gt;()
+    {
+        <span class="pl-k">new</span> ItemPedido()
+        {
+            Product = <span class="pl-s"><span class="pl-pds">"</span>Descrição do produto<span class="pl-pds">"</span></span>,
+            Quantity = <span class="pl-c1">1</span>,
+            Detail = <span class="pl-s"><span class="pl-pds">"</span>Detalhes<span class="pl-pds">"</span></span>,
+            Price = <span class="pl-c1">1000</span>
+        }
+    },
+    Customer = <span class="pl-k">new</span> Cliente()
+    {
+        OwnId = <span class="pl-s"><span class="pl-pds">"</span>SEU_ID_CLIENTE<span class="pl-pds">"</span></span>,
+        Fullname = <span class="pl-s"><span class="pl-pds">"</span>José Silva<span class="pl-pds">"</span></span>,
+        Email = <span class="pl-s"><span class="pl-pds">"</span>josesilva@acme.com.br<span class="pl-pds">"</span></span>,
+        BirthDate = DateTime.Now.Date.AddYears(-<span class="pl-c1">18</span>).ToString(<span class="pl-s"><span class="pl-pds">"</span>yyyy-MM-dd<span class="pl-pds">"</span></span>),
+        TaxDocument = <span class="pl-k">new</span> Documento()
+        {
+            Type = DocumentType.CPF,
+            Number = <span class="pl-s"><span class="pl-pds">"</span>65374721054<span class="pl-pds">"</span></span>
+        },
+        Phone = <span class="pl-k">new</span> Telefone()
+        {
+            CountryCode = <span class="pl-c1">55</span>,
+            AreaCode = <span class="pl-c1">11</span>,
+            Number = <span class="pl-c1">999999999</span>
+        },
+        ShippingAddress = <span class="pl-k">new</span> Endereco()
+        {
+            ZipCode = <span class="pl-s"><span class="pl-pds">"</span>01234000<span class="pl-pds">"</span></span>,
+            Street = <span class="pl-s"><span class="pl-pds">"</span>Avenida Faria Lima<span class="pl-pds">"</span></span>,
+            StreetNumber = <span class="pl-s"><span class="pl-pds">"</span>2927<span class="pl-pds">"</span></span>,
+            Complement = <span class="pl-s"><span class="pl-pds">"</span>SL 1<span class="pl-pds">"</span></span>,
+            City = <span class="pl-s"><span class="pl-pds">"</span>São Paulo<span class="pl-pds">"</span></span>,
+            District = <span class="pl-s"><span class="pl-pds">"</span>Itaim<span class="pl-pds">"</span></span>,
+            State = <span class="pl-s"><span class="pl-pds">"</span>SP<span class="pl-pds">"</span></span>,
+            Country = <span class="pl-s"><span class="pl-pds">"</span>BRA<span class="pl-pds">"</span></span>
+        }
+    };
+};
+
+<span class="pl-k">var</span> clienteCriado = v2Client.CriarPedido(pedido);</pre></div>
+
+<h4>
+<a id="listando-os-pedidos-com-filters" class="anchor" href="#listando-os-pedidos-com-filters" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Listando os pedidos com filters</h4>
+
+<p>Veja a documentação aqui: <a href="http://dev.moip.com.br/referencia-api/#listar-todos-pedidos-get">Listar todos pedidos</a></p>
+
+<div class="highlight highlight-source-cs"><pre>
+<span class="pl-k">var</span> v2Client =  <span class="pl-k">new</span> V2Client(
+    <span class="pl-k">new</span> Uri(<span class="pl-s"><span class="pl-pds">"</span>https://sandbox.moip.com.br/<span class="pl-pds">"</span></span>), 
+    <span class="pl-s"><span class="pl-pds">"</span>API_TOKEN<span class="pl-pds">"</span></span>,
+    <span class="pl-s"><span class="pl-pds">"</span>API_KEY<span class="pl-pds">"</span></span>
+);
+
+<span class="pl-c">//Listar todos os pedidos pagos e criados com data superior a 01/01/2016</span>
+<span class="pl-k">var</span> filters = <span class="pl-k">new</span> Filters()
+    .Add(<span class="pl-k">new</span> GreatherThanFilter&lt;DateTime&gt;(<span class="pl-s"><span class="pl-pds">"</span>createdAt<span class="pl-pds">"</span></span>, <span class="pl-k">new</span> DateTime(<span class="pl-c1">2016</span>, <span class="pl-c1">01</span>, <span class="pl-c1">01</span>)))
+    .Add(<span class="pl-k">new</span> InFilter&lt;OrderStatusType&gt;(<span class="pl-s"><span class="pl-pds">"</span>status<span class="pl-pds">"</span></span>, OrderStatusType.CREATED, OrderStatusType.PAID));
+
+<span class="pl-k">var</span> pedidos = v2Client.ListarTodosPedidos(filters: filters);</pre></div>
+
+<h4>
+<a id="tratamento-de-erro" class="anchor" href="#tratamento-de-erro" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tratamento de erro</h4>
+
+<p>Todas as exceções geradas durante a chamada da API serão retornadas como uma MoipException.
+<a href="http://dev.moip.com.br/referencia-api/#abordagem-restful">Abordagem restful do moip</a></p>
+
+<div class="highlight highlight-source-cs"><pre>
+<span class="pl-k">try</span>
+{
+    <span class="pl-k">var</span> v2Client =  <span class="pl-k">new</span> V2Client(
+        <span class="pl-k">new</span> Uri(<span class="pl-s"><span class="pl-pds">"</span>https://sandbox.moip.com.br/<span class="pl-pds">"</span></span>), 
+        <span class="pl-s"><span class="pl-pds">"</span>API_TOKEN<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>API_KEY<span class="pl-pds">"</span></span>
+    );
+
+    <span class="pl-k">var</span> cliente = <span class="pl-k">new</span> Cliente();
+    v2Client.CriarCliente(cliente);
+}
+<span class="pl-k">catch</span> (MoipException ex)
+{
+    <span class="pl-c">//ex.Message = Mensagem de retorno + descrição de todos os erros retornados do moip com quebra de linha</span>
+    <span class="pl-c">//ex.ResponseError.Errors = Coleção de [Codigo, Path e Description]</span>
+}
+</pre></div>
+
+<h3>
+<a id="o-que-está-implementado" class="anchor" href="#o-que-est%C3%A1-implementado" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>O que está implementado</h3>
+
+<p>Este componente não faz ABSOLUTAMENTE nenhuma validação de dados. Tudo isto fica a cargo da própria API.
+Para verificar os parâmetros obrigatórios e especificidades de cada chamada, verifique a <a href="http://dev.moip.com.br/referencia-api/">documentação</a>.</p>
+
+<ul>
+<li>Clientes
+
+<ul>
+<li>CriarCliente</li>
+<li>ConsultarCliente</li>
+<li>AdicionarCartaoCliente</li>
+</ul>
+</li>
+<li>Pedidos
+
+<ul>
+<li>CriarPedido</li>
+<li>ConsultarPedido</li>
+<li>ListarTodosPedidos</li>
+</ul>
+</li>
+<li>Pagamentos
+
+<ul>
+<li>CriarPagamento</li>
+<li>ConsultarPagamento</li>
+<li>CapturarPagamentoPreAutorizado</li>
+<li>CancelarPagamentoPreAutorizado</li>
+</ul>
+</li>
+</ul>
+
+<p>NÃO IMPLEMENTADOS</p>
+
+<ul>
+<li>Reembolsos</li>
+<li>Multipedidos</li>
+<li>Multipagamentos</li>
+<li>Permissões de terceiros</li>
+<li>Contas Moip</li>
+<li>Contas Bancárias</li>
+<li>Transferências</li>
+<li>Conciliação Financeira</li>
+</ul>
+
+<h2>
+<a id="assinaturas" class="anchor" href="#assinaturas" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Assinaturas</h2>
+
+<p>Todas as funções de assinatura são chamadas através de uma instância da classe AssinaturasClient.
+Para criar uma instância, você deve informar o ambiente (dev ou sandbox), sua API_Key e seu Token.</p>
+
+<div class="highlight highlight-source-cs"><pre><span class="pl-k">var</span> assinaturasClient = 
+    <span class="pl-k">new</span> AssinaturasClient(
+        <span class="pl-k">new</span> Uri(<span class="pl-s"><span class="pl-pds">"</span>https://sandbox.moip.com.br/<span class="pl-pds">"</span></span>), 
+        <span class="pl-s"><span class="pl-pds">"</span>API_TOKEN<span class="pl-pds">"</span></span>,
+        <span class="pl-s"><span class="pl-pds">"</span>API_KEY<span class="pl-pds">"</span></span>);</pre></div>
+
+<h4>
+<a id="criando-uma-assinatura-com-um-novo-cliente" class="anchor" href="#criando-uma-assinatura-com-um-novo-cliente" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Criando uma Assinatura com um novo cliente</h4>
+
+<p><a href="http://dev.moip.com.br/assinaturas-api/#criar-assinaturas-post">http://dev.moip.com.br/assinaturas-api/#criar-assinaturas-post</a></p>
+
+<div class="highlight highlight-source-cs"><pre>
+<span class="pl-k">var</span> subscription = <span class="pl-k">new</span> Subscription()
+{
+    Code = <span class="pl-s"><span class="pl-pds">"</span>_test_assinatura_<span class="pl-pds">"</span></span> + DateTime.Now.Ticks,
+    PaymentMethod = Plan.PaymentMethodPlan.CREDIT_CARD,
+    Plan = firstPlan,
+    Customer = <span class="pl-k">new</span> CustomerRequest()
+    {
+        Code = <span class="pl-s"><span class="pl-pds">"</span>CodigoCliente,</span>
+<span class="pl-s">        Email = <span class="pl-pds">"</span></span>rogerr@acme.com<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">        Fullname = <span class="pl-pds">"</span></span>Roger Rabbit<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">        Cpf = <span class="pl-pds">"</span></span><span class="pl-c1">72716422699</span><span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">        PhoneAreaCode = 11,</span>
+<span class="pl-s">        PhoneNumber = <span class="pl-pds">"</span></span><span class="pl-c1">555555555</span><span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">        BirthdateDay = 19,</span>
+<span class="pl-s">        BirthdateMonth = 7,</span>
+<span class="pl-s">        BirthdateYear = 1985,</span>
+<span class="pl-s">        Address = new CustomerAddress()</span>
+<span class="pl-s">        {</span>
+<span class="pl-s">            Street = <span class="pl-pds">"</span></span>Rua Nome da Rua<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            Number = <span class="pl-pds">"</span></span><span class="pl-c1">100</span><span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            Complement = <span class="pl-pds">"</span></span>AP <span class="pl-c1">51</span><span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            District = <span class="pl-pds">"</span></span>Nossa Senhora <span class="pl-k">do</span> Ó<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            City = <span class="pl-pds">"</span></span>São Paulo<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            State = <span class="pl-pds">"</span></span>SP<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            Country = <span class="pl-pds">"</span></span>BRA<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">            Zipcode = <span class="pl-pds">"</span></span><span class="pl-c1">02927100</span><span class="pl-s"><span class="pl-pds">"</span></span>
+<span class="pl-s">        },</span>
+<span class="pl-s">        BillingInfo = new BillingInfoRequest()</span>
+<span class="pl-s">        {</span>
+<span class="pl-s">            CreditCard = new CreditCard()</span>
+<span class="pl-s">            {</span>
+<span class="pl-s">                HolderName = <span class="pl-pds">"</span></span>Roger Rabbit<span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">                Number = <span class="pl-pds">"</span></span><span class="pl-c1">4111111111111111</span><span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">                ExpirationMonth = <span class="pl-pds">"</span></span><span class="pl-c1">04</span><span class="pl-s"><span class="pl-pds">"</span>,</span>
+<span class="pl-s">                ExpirationYear = <span class="pl-pds">"</span></span><span class="pl-c1">30</span><span class="pl-s"><span class="pl-pds">"</span></span>
+<span class="pl-s">            }</span>
+<span class="pl-s">        }</span>
+<span class="pl-s">};</span>
+<span class="pl-s"></span>
+<span class="pl-s">assinaturasClient.CreateSubscription(subscription, true);</span>
+<span class="pl-s"></span></pre></div>
+
+<h2>
+<a id="observações" class="anchor" href="#observa%C3%A7%C3%B5es" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Observações</h2>
+
+<ul>
+<li>As outras funções seguem a mesma linha e a biblioteca possui documentação dos parâmetros (mas sempre é bom consultar a documentação oficial)</li>
+<li>Sobre os nomes das propriedades em inglês e funções em portugês, tentei seguir ao máximo a descrição da documentação oficial do moip, para facilitar o uso.</li>
+<li>Os testes unitários estão passando 100%, com 90% de code coverage :)</li>
+<li>Qualquer dúvida ou sugestão, crie seu issue ou <a href="mailto:rafagoncalves+moipnet@gmail.com">entre em contato</a>
+</li>
+</ul>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
