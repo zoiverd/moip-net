@@ -1,4 +1,4 @@
-﻿using Moip.Net.JsonResolvers;
+﻿using Moip.Net.Assinaturas;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
@@ -27,31 +27,16 @@ namespace Moip.Net
 
         #region JsonSerializerSettings
 
-        public static JsonSerializerSettings _jsonSettings;
-        public static JsonSerializerSettings JsonSettings
-        {
-            get
-            {
-                if (_jsonSettings == null)
-                {
-                    _jsonSettings = new JsonSerializerSettings();
-                    _jsonSettings.Converters.Add(new StringEnumConverter());
-                    _jsonSettings.Formatting = Formatting.Indented;
-                    _jsonSettings.ContractResolver = new MoipContractResolver();
-                    _jsonSettings.NullValueHandling = NullValueHandling.Ignore;
-                }
-                return _jsonSettings;
-            }
-        }
+        protected abstract JsonSerializerSettings JsonSettings { get; }
 
 
-        public static string ToJson(object item)
+        public string ToJson(object item)
         {
             return JsonConvert.SerializeObject(item, JsonSettings);
 
         }
 
-        public static T FromJson<T>(string json)
+        public T FromJson<T>(string json)
         {
             return JsonConvert.DeserializeObject<T>(json, JsonSettings);
         } 
@@ -108,12 +93,7 @@ namespace Moip.Net
             var json = DoRequest(uri, method, body);
             return FromJson<T>(json);
         }
-
-        protected virtual string DoRequest(Uri uri)
-        {
-            return DoRequest(uri, "GET", null);
-        }
-
+        
         protected virtual string DoRequest(Uri uri, string method)
         {
             return DoRequest(uri, method, null);

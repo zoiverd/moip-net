@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json.Serialization;
 using System.Text.RegularExpressions;
 
-namespace Moip.Net.JsonResolvers
+namespace Moip.Net.Assinaturas
 {
-    public class MoipContractResolver : DefaultContractResolver
+    public class AssinaturasMoipContractResolver : DefaultContractResolver
     {
         protected override string ResolvePropertyName(string propertyName)
         {

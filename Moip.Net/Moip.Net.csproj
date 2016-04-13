@@ -33,8 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net35\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\net35\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -67,13 +67,56 @@
     <Compile Include="Assinaturas\SubscriptionResponse.cs" />
     <Compile Include="Assinaturas\SubscriptionTrial.cs" />
     <Compile Include="BaseClient.cs" />
-    <Compile Include="MoipContractResolver.cs" />
+    <Compile Include="Assinaturas\AssinaturasContractResolver.cs" />
     <Compile Include="MoipDate.cs" />
     <Compile Include="MoipException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResponseDetail.cs" />
     <Compile Include="ResponseError.cs" />
     <Compile Include="Response.cs" />
+    <Compile Include="V2\Filter\InFilter.cs" />
+    <Compile Include="V2\Filter\BaseFilter.cs" />
+    <Compile Include="V2\Filter\Filters.cs" />
+    <Compile Include="V2\Filter\BetweenFilter.cs" />
+    <Compile Include="V2\Filter\LessThanOrEqualFilter.cs" />
+    <Compile Include="V2\Filter\LessThanFilter.cs" />
+    <Compile Include="V2\Filter\GreatherThanOrEqualFilter.cs" />
+    <Compile Include="V2\Filter\GreatherThanFilter.cs" />
+    <Compile Include="V2\Model\ContaMoip.cs" />
+    <Compile Include="V2\Model\Lancamento.cs" />
+    <Compile Include="V2\Model\Parcela.cs" />
+    <Compile Include="V2\Model\Pedidos.cs" />
+    <Compile Include="V2\Model\Recebedores.cs" />
+    <Compile Include="V2\Model\Resumo.cs" />
+    <Compile Include="V2\Model\Valores.cs" />
+    <Compile Include="V2\Model\ContaBancaria.cs" />
+    <Compile Include="V2\Model\Boleto.cs" />
+    <Compile Include="V2\Model\DetalhesCancelamento.cs" />
+    <Compile Include="V2\Model\CheckoutMoip.cs" />
+    <Compile Include="V2\Model\PreferenciasCheckout.cs" />
+    <Compile Include="V2\Model\Evento.cs" />
+    <Compile Include="V2\Model\Taxa.cs" />
+    <Compile Include="V2\Model\Parcelamento.cs" />
+    <Compile Include="V2\Model\LinhasInstrucao.cs" />
+    <Compile Include="V2\Model\Link.cs" />
+    <Compile Include="V2\Model\Links.cs" />
+    <Compile Include="V2\Model\DebitoOnline.cs" />
+    <Compile Include="V2\Model\ItemPedido.cs" />
+    <Compile Include="V2\Model\Pedido.cs" />
+    <Compile Include="V2\Model\Pagamento.cs" />
+    <Compile Include="V2\Model\Redirecionamento.cs" />
+    <Compile Include="V2\Model\Reembolso.cs" />
+    <Compile Include="V2\Model\Subtotal.cs" />
+    <Compile Include="V2\Configuration\V2ContractResolver.cs" />
+    <Compile Include="V2\Model\Enums.cs" />
+    <Compile Include="V2\Model\CartaoCredito.cs" />
+    <Compile Include="V2\Model\Endereco.cs" />
+    <Compile Include="V2\Model\Cliente.cs" />
+    <Compile Include="V2\Model\Telefone.cs" />
+    <Compile Include="V2\Model\Documento.cs" />
+    <Compile Include="V2\Model\MeioPagamento.cs" />
+    <Compile Include="V2\Model\Portador.cs" />
+    <Compile Include="V2\V2Client.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
