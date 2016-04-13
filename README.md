@@ -150,18 +150,18 @@ Este componente não faz ABSOLUTAMENTE nenhuma validação de dados. Tudo isto f
 Para verificar os parâmetros obrigatórios e especificidades de cada chamada, verifique a [documentação](http://dev.moip.com.br/referencia-api/).
 
 * Clientes
-⋅⋅* CriarCliente
-⋅⋅* ConsultarCliente
-⋅⋅* AdicionarCartaoCliente
+	* CriarCliente
+	* ConsultarCliente
+	* AdicionarCartaoCliente
 * Pedidos
-⋅⋅* CriarPedido
-⋅⋅* ConsultarPedido
-⋅⋅* ListarTodosPedidos
+	* CriarPedido
+	* ConsultarPedido
+	* ListarTodosPedidos
 * Pagamentos
-⋅⋅* CriarPagamento
-⋅⋅* ConsultarPagamento
-⋅⋅* CapturarPagamentoPreAutorizado
-⋅⋅* CancelarPagamentoPreAutorizado
+	* CriarPagamento
+	* ConsultarPagamento
+	* CapturarPagamentoPreAutorizado
+	* CancelarPagamentoPreAutorizado
 
 NÃO IMPLEMENTADOS
 * Reembolsos
