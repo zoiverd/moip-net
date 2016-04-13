@@ -1,175 +1,176 @@
 # Moip.Net
 
-	Moip.Net é uma biblioteca para utilizar as funções da API do Moip.
+Moip.Net é uma biblioteca para utilizar as funções da API do Moip.
 
-	ATENÇÃO! A implementação da V1 da API não será considerada neste componente, uma vez que a V2 já está em ambiente de produção.
+ATENÇÃO! A implementação da V1 da API não será considerada neste componente, uma vez que a V2 já está em ambiente de produção.
 
-	Estão implementadas as bibliotecas de Assinatura e Pagamento V2.
+Estão implementadas as bibliotecas de Assinatura e Pagamento V2.
 
 ## Instalação
 
-	Moip.Net está disponível como um [NuGet Package](https://www.nuget.org/packages/moip-net/). Esta é a melhor forma de instalar a biblioteca no seu projeto.
+Moip.Net está disponível como um [NuGet Package](https://www.nuget.org/packages/moip-net/). Esta é a melhor forma de instalar a biblioteca no seu projeto.
 
-	### Visual Studio
+### Visual Studio
 
-		Click on *Tools -> NuGet Package Manager -> Package Manager Console* and enter the following
+Click on *Tools -> NuGet Package Manager -> Package Manager Console* and enter the following
 
-		PM> Install-Package moip-net
+PM> Install-Package moip-net
 
 ## Pagamentos v2
 
-	### Como usar
+### Como usar
 
-		A biblioteca irá chamar a API do moip. Veja na [Documentação do moip](http://dev.moip.com.br/referencia-api/) os parâmetros que devem ser enviadas a cada chamada.
+A biblioteca irá chamar a API do moip. Veja na [Documentação do moip](http://dev.moip.com.br/referencia-api/) os parâmetros que devem ser enviadas a cada chamada.
 
-		Nos exemplos escritos, estamos assumindo que há os seguintes usings
+Nos exemplos escritos, estamos assumindo que há os seguintes usings
 
-		```cs
-		using Moip.Net.V2;
-		using Moip.Net.V2.Model;
-		```
+```cs
+using Moip.Net.V2;
+using Moip.Net.V2.Model;
+```
 
-	### Exemplos
+### Exemplos
 
-		Todas as funções de pagamento são chamadas através de uma instância da classe V2Client.
-		Para criar uma instância, você deve informar o ambiente (produção ou sandbox), sua API_Key e seu Token.
+Todas as funções de pagamento são chamadas através de uma instância da classe V2Client.
+Para criar uma instância, você deve informar o ambiente (produção ou sandbox), sua API_Key e seu Token.
 
-		#### Criando um pedido com um novo cliente
+#### Criando um pedido com um novo cliente
 
-			Veja a documentação aqui: [Criar pedido](http://dev.moip.com.br/referencia-api/#criar-pedido-post)
+Veja a documentação aqui: [Criar pedido](http://dev.moip.com.br/referencia-api/#criar-pedido-post)
 
-			```cs
+```cs
 
-				var v2Client =  new V2Client(
-					new Uri("https://sandbox.moip.com.br/"), 
-					"API_TOKEN",
-					"API_KEY"
-				);
+var v2Client =  new V2Client(
+	new Uri("https://sandbox.moip.com.br/"), 
+	"API_TOKEN",
+	"API_KEY"
+);
 
-				var pedido = new Pedido()
-				{
-					OwnId = "SEU_CODIGO_PEDIDO",
-					Amount = new Valores()
-					{
-						Currency = CurrencyType.BRL,
-						Subtotals = new Subtotal()
-						{
-							Shipping = 1000
-						}
-					},
-					Items = new List<ItemPedido>()
-					{
-						new ItemPedido()
-						{
-							Product = "Descrição do produto",
-							Quantity = 1,
-							Detail = "Detalhes",
-							Price = 1000
-						}
-					},
-					Customer = new Cliente()
-					{
-						OwnId = "SEU_ID_CLIENTE",
-						Fullname = "José Silva",
-						Email = "josesilva@acme.com.br",
-						BirthDate = DateTime.Now.Date.AddYears(-18).ToString("yyyy-MM-dd"),
-						TaxDocument = new Documento()
-						{
-							Type = DocumentType.CPF,
-							Number = "65374721054"
-						},
-						Phone = new Telefone()
-						{
-							CountryCode = 55,
-							AreaCode = 11,
-							Number = 999999999
-						},
-						ShippingAddress = new Endereco()
-						{
-							ZipCode = "01234000",
-							Street = "Avenida Faria Lima",
-							StreetNumber = "2927",
-							Complement = "SL 1",
-							City = "São Paulo",
-							District = "Itaim",
-							State = "SP",
-							Country = "BRA"
-						}
-					};
-				};
+var pedido = new Pedido()
+{
+	OwnId = "SEU_CODIGO_PEDIDO",
+	Amount = new Valores()
+	{
+		Currency = CurrencyType.BRL,
+		Subtotals = new Subtotal()
+		{
+			Shipping = 1000
+		}
+	},
+	Items = new List<ItemPedido>()
+	{
+		new ItemPedido()
+		{
+			Product = "Descrição do produto",
+			Quantity = 1,
+			Detail = "Detalhes",
+			Price = 1000
+		}
+	},
+	Customer = new Cliente()
+	{
+		OwnId = "SEU_ID_CLIENTE",
+		Fullname = "José Silva",
+		Email = "josesilva@acme.com.br",
+		BirthDate = DateTime.Now.Date.AddYears(-18).ToString("yyyy-MM-dd"),
+		TaxDocument = new Documento()
+		{
+			Type = DocumentType.CPF,
+			Number = "65374721054"
+		},
+		Phone = new Telefone()
+		{
+			CountryCode = 55,
+			AreaCode = 11,
+			Number = 999999999
+		},
+		ShippingAddress = new Endereco()
+		{
+			ZipCode = "01234000",
+			Street = "Avenida Faria Lima",
+			StreetNumber = "2927",
+			Complement = "SL 1",
+			City = "São Paulo",
+			District = "Itaim",
+			State = "SP",
+			Country = "BRA"
+		}
+	};
+};
 
-				var clienteCriado = v2Client.CriarPedido(pedido);
-			```
-		#### Listando os pedidos com filters
-			Veja a documentação aqui: [Listar todos pedidos](http://dev.moip.com.br/referencia-api/#listar-todos-pedidos-get)
+var clienteCriado = v2Client.CriarPedido(pedido);
+```
+#### Listando os pedidos com filters
+Veja a documentação aqui: [Listar todos pedidos](http://dev.moip.com.br/referencia-api/#listar-todos-pedidos-get)
 
-			```cs
+```cs
 
-				var v2Client =  new V2Client(
-					new Uri("https://sandbox.moip.com.br/"), 
-					"API_TOKEN",
-					"API_KEY"
-				);
+var v2Client =  new V2Client(
+	new Uri("https://sandbox.moip.com.br/"), 
+	"API_TOKEN",
+	"API_KEY"
+);
 
-				//Listar todos os pedidos pagos e criados com data superior a 01/01/2016
-				var filters = new Filters()
-					.Add(new GreatherThanFilter<DateTime>("createdAt", new DateTime(2016, 01, 01)))
-					.Add(new InFilter<OrderStatusType>("status", OrderStatusType.CREATED, OrderStatusType.PAID));
+//Listar todos os pedidos pagos e criados com data superior a 01/01/2016
+var filters = new Filters()
+	.Add(new GreatherThanFilter<DateTime>("createdAt", new DateTime(2016, 01, 01)))
+	.Add(new InFilter<OrderStatusType>("status", OrderStatusType.CREATED, OrderStatusType.PAID));
 
-				var pedidos = v2Client.ListarTodosPedidos(filters: filters);
-			```
-		#### Tratamento de erro
-			Todas as exceções geradas durante a chamada da API serão retornadas como uma MoipException.
+var pedidos = v2Client.ListarTodosPedidos(filters: filters);
+```
+#### Tratamento de erro
+Todas as exceções geradas durante a chamada da API serão retornadas como uma MoipException.
 			
 
-			```cs
+```cs
 
-				try
-				{
-					var v2Client =  new V2Client(
-						new Uri("https://sandbox.moip.com.br/"), 
-						"API_TOKEN",
-						"API_KEY"
-					);
+try
+{
+	var v2Client =  new V2Client(
+		new Uri("https://sandbox.moip.com.br/"), 
+		"API_TOKEN",
+		"API_KEY"
+	);
 
-					var cliente = new Cliente();
-					v2Client.CriarCliente(cliente);
-				}
-				catch (MoipException ex)
-				{
-					//ex.Message = Mensagem de retorno + descrição de todos os erros retornados do moip com quebra de linha
-					//ex.ResponseError.Errors = Coleção de [Codigo, Path e Description](http://dev.moip.com.br/referencia-api/#abordagem-restful)
-				}
-			```
+	var cliente = new Cliente();
+	v2Client.CriarCliente(cliente);
+}
+catch (MoipException ex)
+{
+	//ex.Message = Mensagem de retorno + descrição de todos os erros retornados do moip com quebra de linha
+	//ex.ResponseError.Errors = Coleção de [Codigo, Path e Description](http://dev.moip.com.br/referencia-api/#abordagem-restful)
+}
 
-	### O que está implementado
+```
 
-		Este componente não faz ABSOLUTAMENTE nenhuma validação de dados. Tudo isto fica a cargo da própria API.
-		Para verificar os parâmetros obrigatórios e especificidades de cada chamada, verifique a [documentação](http://dev.moip.com.br/referencia-api/).
+### O que está implementado
 
-		- Clientes
-		..- CriarCliente
-		..- ConsultarCliente
-		..- AdicionarCartaoCliente
-		- Pedidos
-		..- CriarPedido
-		..- ConsultarPedido
-		..- ListarTodosPedidos
-		- Pagamentos
-		..- CriarPagamento
-		..- ConsultarPagamento
-		..- CapturarPagamentoPreAutorizado
-		..- CancelarPagamentoPreAutorizado
+Este componente não faz ABSOLUTAMENTE nenhuma validação de dados. Tudo isto fica a cargo da própria API.
+Para verificar os parâmetros obrigatórios e especificidades de cada chamada, verifique a [documentação](http://dev.moip.com.br/referencia-api/).
 
-		NÃO IMPLEMENTADOS
-		- Reembolsos
-		- Multipedidos
-		- Multipagamentos
-		- Permissões de terceiros
-		- Contas Moip
-		- Contas Bancárias
-		- Transferências
-		- Conciliação Financeira
+- Clientes
+..- CriarCliente
+..- ConsultarCliente
+..- AdicionarCartaoCliente
+- Pedidos
+..- CriarPedido
+..- ConsultarPedido
+..- ListarTodosPedidos
+- Pagamentos
+..- CriarPagamento
+..- ConsultarPagamento
+..- CapturarPagamentoPreAutorizado
+..- CancelarPagamentoPreAutorizado
+
+NÃO IMPLEMENTADOS
+- Reembolsos
+- Multipedidos
+- Multipagamentos
+- Permissões de terceiros
+- Contas Moip
+- Contas Bancárias
+- Transferências
+- Conciliação Financeira
 
 ## Assinaturas
 
@@ -178,10 +179,10 @@ Para criar uma instância, você deve informar o ambiente (dev ou sandbox), sua 
 
 ```cs
 var assinaturasClient = 
-		new AssinaturasClient(
-			new Uri("https://sandbox.moip.com.br/"), 
-			"API_TOKEN",
-			"API_KEY");
+	new AssinaturasClient(
+		new Uri("https://sandbox.moip.com.br/"), 
+		"API_TOKEN",
+		"API_KEY");
 ```
 
 #### Criando uma Assinatura com um novo cliente
