@@ -12,9 +12,9 @@ Moip.Net está disponível como um [NuGet Package](https://www.nuget.org/package
 
 ### Visual Studio
 
-Click on *Tools -> NuGet Package Manager -> Package Manager Console* and enter the following
+	Click on *Tools -> NuGet Package Manager -> Package Manager Console* and enter the following
 
-PM> Install-Package moip-net
+	PM> Install-Package moip-net
 
 ## Pagamentos v2
 
@@ -120,6 +120,7 @@ var pedidos = v2Client.ListarTodosPedidos(filters: filters);
 ```
 #### Tratamento de erro
 Todas as exceções geradas durante a chamada da API serão retornadas como uma MoipException.
+[Abordagem restful do moip](http://dev.moip.com.br/referencia-api/#abordagem-restful)
 			
 
 ```cs
@@ -138,7 +139,7 @@ try
 catch (MoipException ex)
 {
 	//ex.Message = Mensagem de retorno + descrição de todos os erros retornados do moip com quebra de linha
-	//ex.ResponseError.Errors = Coleção de [Codigo, Path e Description](http://dev.moip.com.br/referencia-api/#abordagem-restful)
+	//ex.ResponseError.Errors = Coleção de [Codigo, Path e Description]
 }
 
 ```
@@ -148,29 +149,29 @@ catch (MoipException ex)
 Este componente não faz ABSOLUTAMENTE nenhuma validação de dados. Tudo isto fica a cargo da própria API.
 Para verificar os parâmetros obrigatórios e especificidades de cada chamada, verifique a [documentação](http://dev.moip.com.br/referencia-api/).
 
-- Clientes
-..- CriarCliente
-..- ConsultarCliente
-..- AdicionarCartaoCliente
-- Pedidos
-..- CriarPedido
-..- ConsultarPedido
-..- ListarTodosPedidos
-- Pagamentos
-..- CriarPagamento
-..- ConsultarPagamento
-..- CapturarPagamentoPreAutorizado
-..- CancelarPagamentoPreAutorizado
+* Clientes
+..* CriarCliente
+..* ConsultarCliente
+..* AdicionarCartaoCliente
+* Pedidos
+..* CriarPedido
+..* ConsultarPedido
+..* ListarTodosPedidos
+* Pagamentos
+..* CriarPagamento
+..* ConsultarPagamento
+..* CapturarPagamentoPreAutorizado
+..* CancelarPagamentoPreAutorizado
 
 NÃO IMPLEMENTADOS
-- Reembolsos
-- Multipedidos
-- Multipagamentos
-- Permissões de terceiros
-- Contas Moip
-- Contas Bancárias
-- Transferências
-- Conciliação Financeira
+* Reembolsos
+* Multipedidos
+* Multipagamentos
+* Permissões de terceiros
+* Contas Moip
+* Contas Bancárias
+* Transferências
+* Conciliação Financeira
 
 ## Assinaturas
 
