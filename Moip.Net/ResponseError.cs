@@ -24,8 +24,14 @@ namespace Moip.Net
         {
             get
             {
-                var msg = Message;
-                msg += string.Join(@"\r\n", Errors.Select(x => "- " + x.Description).ToArray());
+                var msg = "";
+                if (!string.IsNullOrEmpty(Message))
+                {
+                    msg += Message + (Errors.Length > 0 ? Environment.NewLine : "");
+                }
+
+                msg += string.Join(Environment.NewLine, Errors.Select(x => x.Description).ToArray());
+
                 return msg;
             }
         }

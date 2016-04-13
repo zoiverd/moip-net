@@ -11,6 +11,50 @@ namespace Moip.Net.Assinaturas.Tests
     {
         private AssinaturasClient assinaturasClient = new AssinaturasClient(Settings.ApiUri, Settings.ApiToken, Settings.ApiKey);
 
+        #region SerializerTests
+
+        public class TestJsonSerializer
+        {
+            public string NomeCompleto { get; set; }
+            public int Idade { get; set; }
+            public TipoCliente Tipo { get; set; }
+            public enum TipoCliente
+            {
+                ATIVO,
+                INATIVO
+            }
+        }
+        private string jsonTest = @"{
+  ""nome_completo"": ""Rafael Gonçalves"",
+  ""idade"": 19,
+  ""tipo"": ""ATIVO""
+}";
+
+        [TestMethod()]
+        public void ToJsonTest()
+        {
+            var json = assinaturasClient.ToJson(new TestJsonSerializer
+            {
+                NomeCompleto = "Rafael Gonçalves",
+                Idade = 19,
+                Tipo = TestJsonSerializer.TipoCliente.ATIVO
+            });
+
+            Assert.AreEqual(jsonTest, json);
+        }
+
+        [TestMethod()]
+        public void FromJsonTest()
+        {
+            var obj = assinaturasClient.FromJson<TestJsonSerializer>(jsonTest);
+
+            Assert.AreEqual("Rafael Gonçalves", obj.NomeCompleto);
+            Assert.AreEqual(19, obj.Idade);
+            Assert.AreEqual(TestJsonSerializer.TipoCliente.ATIVO, obj.Tipo);
+        }
+
+        #endregion
+
         #region Plans
         private Plan NewMockPlan()
         {
@@ -379,7 +423,7 @@ namespace Moip.Net.Assinaturas.Tests
                 throw new AssertInconclusiveException("Nenhum plano diferente de cancelado foi encontrado na conta moip");
             }
 
-            var random = new Random().Next(30);
+            var random = new Random().Next(2, 30);
             var newDate = DateTime.Now.AddDays(random).Date;
             firstActive.NextInvoiceDate = MoipDate.FromDate(newDate);
             assinaturasClient.UpdateSubscription(firstActive.Code, firstActive);

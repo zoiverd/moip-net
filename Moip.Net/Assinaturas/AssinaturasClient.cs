@@ -1,9 +1,28 @@
 ﻿using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Moip.Net.Assinaturas
 {
     public class AssinaturasClient : BaseClient
     {
+        private JsonSerializerSettings _jsonSettings;
+        protected override JsonSerializerSettings JsonSettings
+        {
+            get
+            {
+                if (_jsonSettings == null)
+                {
+                    _jsonSettings = new JsonSerializerSettings();
+                    _jsonSettings.Converters.Add(new StringEnumConverter());
+                    _jsonSettings.Formatting = Formatting.Indented;
+                    _jsonSettings.ContractResolver = new AssinaturasMoipContractResolver();
+                    _jsonSettings.NullValueHandling = NullValueHandling.Ignore;
+                }
+                return _jsonSettings;
+            }
+        }
+
         public AssinaturasClient(Uri apiAddress, string apiToken, string apiKey) : base(apiAddress, apiToken, apiKey) { }
 
         protected override Uri PathToUri(string path, string query = null)

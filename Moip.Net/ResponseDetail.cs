@@ -16,5 +16,10 @@ namespace Moip.Net
         /// Código do alerta
         /// </summary>
         public string Code { get; set; }
+
+        /// <summary>
+        /// Parâmetro relacionado ao erro (Apenas V2)
+        /// </summary>
+        public string Path { get; set; }
     }
 }
