@@ -139,7 +139,7 @@ namespace Moip.Net.V2.Tests
                     Holder = new Portador()
                     {
                         Fullname = "Jose Portador da Silva",
-                        BirthDate = DateTime.Now.ToString("yyyy-MM-dd"),
+                        Birthdate = DateTime.Now.ToString("yyyy-MM-dd"),
                         TaxDocument = new Documento()
                         {
                             Type = DocumentType.CPF,
@@ -252,7 +252,7 @@ namespace Moip.Net.V2.Tests
                         Holder = new Portador()
                         {
                             Fullname = "Jose Portador da Silva",
-                            BirthDate = "1988-12-30",
+                            Birthdate = "1988-12-30",
                             TaxDocument = new Documento()
                             {
                                 Type = DocumentType.CPF,
