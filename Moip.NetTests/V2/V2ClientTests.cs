@@ -246,8 +246,8 @@ namespace Moip.Net.V2.Tests
                     CreditCard = new CartaoCredito()
                     {
                         Number = "5555666677778884",
-                        ExpirationMonth = 5,
-                        ExpirationYear = 2018,
+                        ExpirationMonth = DateTime.Now.Month,
+                        ExpirationYear = DateTime.Now.AddYears(5).Year,
                         Cvc = 123,
                         Holder = new Portador()
                         {

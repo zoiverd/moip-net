@@ -280,8 +280,8 @@ namespace Moip.Net.Assinaturas.Tests
                 {
                     HolderName = "Novo Nome",
                     Number = "5555666677778884",
-                    ExpirationMonth = "04",
-                    ExpirationYear = "16"
+                    ExpirationMonth = DateTime.Now.ToString("MM"),
+                    ExpirationYear = DateTime.Now.AddYears(5).ToString("yy")
                 }
             };
 
