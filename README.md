@@ -1,3 +1,5 @@
+** Atenção!!! Infelizmente não estou mais mantendo esta biblioteca, então não sei mais como está o funcionamento com as novidades no moip **
+
 # Moip.Net
 
 Moip.Net é uma biblioteca para utilizar as funções da API do Moip.
