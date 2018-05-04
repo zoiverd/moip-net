@@ -19,7 +19,7 @@ namespace Moip.Net
         {
             var year = Year ?? DateTime.Now.Year;
             var month = Month ?? DateTime.Now.Month;
-            var day = Day ?? DateTime.Now.Month;
+            var day = Day ?? DateTime.Now.Day;
 
             var data = new DateTime(year, month, day);
 
@@ -27,7 +27,7 @@ namespace Moip.Net
                 data = data.AddHours(Hour.Value);
             if (Minute.HasValue)
                 data = data.AddMinutes(Minute.Value);
-            if (Minute.HasValue)
+            if (Second.HasValue)
                 data = data.AddSeconds(Second.Value);
             
             return data;
