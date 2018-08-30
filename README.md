@@ -1,5 +1,7 @@
 ** Atenção!!! Infelizmente não estou mais mantendo esta biblioteca, então não sei mais como está o funcionamento com as novidades no moip **
 
+Você pode utilizar esta biblioteca https://github.com/matmiranda/MoipCSharp está mais completa.
+
 # Moip.Net
 
 Moip.Net é uma biblioteca para utilizar as funções da API do Moip.
