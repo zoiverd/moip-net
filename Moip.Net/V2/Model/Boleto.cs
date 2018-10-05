@@ -8,7 +8,7 @@ namespace Moip.Net.V2.Model
     public class Boleto
     {
         public string LineCode { get; set; }
-        public DateTime ExpirationDate { get; set; }
+        public string ExpirationDate { get; set; }
         public LinhasInstrucao InstructionLines { get; set; }
         public string LogoUri { get; set; }
     }
